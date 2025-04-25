@@ -9,3 +9,5 @@
 `snackbar` с ошибкой и показывает данные из локального кэша, если он есть.
 
 ## Showcase
+
+https://github.com/user-attachments/assets/188204cd-b73b-41b0-b9a3-b10f935b43e5
