@@ -2,6 +2,7 @@ package com.example.rickandmortyapp.presentation.viewmodel
 
 import com.example.rickandmortyapp.domain.entity.CharacterEntity
 import com.example.rickandmortyapp.domain.repository.IRickRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,7 @@ class CharacterViewModel(
 ) {
     private val _characters = MutableStateFlow(emptyList<CharacterEntity>())
 
-    val charactes: StateFlow<List<CharacterEntity>> = _characters.asStateFlow()
+    val characters: StateFlow<List<CharacterEntity>> = _characters.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -22,6 +23,7 @@ class CharacterViewModel(
     suspend fun loadCharacters(forceRefresh: Boolean = false) {
         _isLoading.value = true
         _isError.value = false
+        delay(1000) // for debugging purposes
         try {
             val charactersList = repository.getAllCharacters(forceRefresh)
             _characters.value = charactersList

@@ -12,6 +12,7 @@ abstract class CharacterMapper {
             return CharacterEntity(
                 name = dto.name,
                 status = dto.status,
+                species = dto.species,
                 image = dto.image.toUri()
             )
         }
@@ -20,7 +21,18 @@ abstract class CharacterMapper {
             return CharacterEntity(
                 name = model.name,
                 status = model.status,
+                species = model.species,
                 image = model.image.toUri()
+            )
+        }
+
+        fun mapDtoToModel(dto: CharacterDto): CharacterModel {
+            return CharacterModel(
+                id = dto.id,
+                name = dto.name,
+                status = dto.status,
+                species = dto.species,
+                image = dto.image
             )
         }
     }

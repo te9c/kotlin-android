@@ -1,6 +1,7 @@
 package com.example.rickandmortyapp.data.service
 
 import com.example.rickandmortyapp.data.common.api.NetworkModule
+import com.example.rickandmortyapp.data.dto.CharacterDto
 import com.example.rickandmortyapp.data.dto.CharacterListDto
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -14,8 +15,7 @@ object RickApiService {
         return NetworkModule.publicClient.get("$BASE_URL/character").body()
     }
 
-    // TODO: look
-    suspend fun getCharacterById(id: Int): CharacterListDto {
+    suspend fun getCharacterById(id: Int): CharacterDto {
         return NetworkModule.publicClient.get("$BASE_URL/character/$id").body()
     }
 }

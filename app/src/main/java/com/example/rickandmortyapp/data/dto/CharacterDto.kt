@@ -9,5 +9,6 @@ data class CharacterDto(
     val name: String,
     val status: String,
     val gender: String,
-    val image: String
+    val image: String,
+    val species: String
 )

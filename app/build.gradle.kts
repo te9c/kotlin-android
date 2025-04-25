@@ -7,6 +7,8 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("com.google.devtools.ksp")
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 android {
@@ -74,6 +76,8 @@ dependencies {
 
     implementation("androidx.room:room-runtime:$room_version")
 
+    ksp("androidx.room:room-compiler:$room_version")
+
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
 
@@ -91,4 +95,7 @@ dependencies {
 
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
+
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("androidx.compose.material3:material3:1.1.2")
 }

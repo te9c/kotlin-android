@@ -14,7 +14,9 @@ class RickRepository(
         val localData = dao.getAllCharacters()
         if (localData.isEmpty() || forceRefresh) {
             val remoteData = apiService.getAllCharacters()
-            return remoteData.result.map { CharacterMapper.mapDtoToEntity(it) }
+            dao.deleteAll()
+            dao.insertCharacters(remoteData.results.map { CharacterMapper.mapDtoToModel(it) })
+            return remoteData.results.map { CharacterMapper.mapDtoToEntity(it) }
         }
 
         return localData.map { CharacterMapper.mapModelToEntity(it) }

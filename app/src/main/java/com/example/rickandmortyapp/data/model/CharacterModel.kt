@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class CharacterModel(
     @PrimaryKey val id: Int,
     val name: String,
-    val age: Int,
     val image: String,
+    val species: String,
     val status: String
 )
