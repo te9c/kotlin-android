@@ -81,6 +81,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(viewModel: CharacterViewModel) {
     //val isLoading by viewModel.isLoading.collectAsState()
+    val isForceLoading by viewModel.isForceLoading.collectAsState()
     val isError by viewModel.isError.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -107,7 +108,19 @@ fun MainScreen(viewModel: CharacterViewModel) {
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            CharacterListScreen(viewModel)
+            if (isForceLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        strokeWidth = 4.dp,
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
+            } else {
+                CharacterListScreen(viewModel)
+            }
         }
     }
 }

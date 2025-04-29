@@ -17,6 +17,9 @@ class CharacterViewModel(
 
     val characters: StateFlow<List<CharacterEntity>> = _characters.asStateFlow()
 
+    private val _isForceLoading = MutableStateFlow(false)
+    val isForceLoading: StateFlow<Boolean> = _isForceLoading.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -27,6 +30,7 @@ class CharacterViewModel(
         if (forceRefresh) {
             currentPage = 1
             _hasMore.value = true
+            _isForceLoading.value = true
         }
         if (!_hasMore.value) return
 
@@ -42,6 +46,7 @@ class CharacterViewModel(
             _isError.value = true
         } finally {
             _isLoading.value = false
+            _isForceLoading.value = false
         }
     }
 }
