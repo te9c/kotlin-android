@@ -11,6 +11,9 @@ interface CharactersDao {
     @Query("SELECT * FROM characters")
     suspend fun getAllCharacters(): List<CharacterModel>
 
+    @Query("SELECT * FROM characters WHERE id > (:page - 1) * 20 AND id <= :page * 20")
+    suspend fun getPage(page: Int): List<CharacterModel>
+
     @Query("SELECT * FROM characters WHERE id = :id")
     suspend fun getCharactersById(id: String): CharacterModel
 

@@ -11,8 +11,8 @@ import kotlinx.coroutines.withContext
 object RickApiService {
     private const val BASE_URL = "https://rickandmortyapi.com/api"
 
-    suspend fun getAllCharacters(): CharacterListDto {
-        return NetworkModule.publicClient.get("$BASE_URL/character").body()
+    suspend fun getAllCharacters(page: Int): CharacterListDto {
+        return NetworkModule.publicClient.get("$BASE_URL/character/?page=$page").body()
     }
 
     suspend fun getCharacterById(id: Int): CharacterDto {

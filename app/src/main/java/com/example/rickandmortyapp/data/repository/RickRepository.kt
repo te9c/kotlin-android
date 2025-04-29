@@ -10,11 +10,13 @@ class RickRepository(
     private val apiService: RickApiService,
     private val dao: CharactersDao
 ) : IRickRepository {
-    override suspend fun getAllCharacters(forceRefresh: Boolean): List<CharacterEntity> {
-        val localData = dao.getAllCharacters()
+    override suspend fun getAllCharacters(page: Int, forceRefresh: Boolean): List<CharacterEntity> {
+        val localData = dao.getPage(page)
         if (localData.isEmpty() || forceRefresh) {
-            val remoteData = apiService.getAllCharacters()
-            dao.deleteAll()
+            val remoteData = apiService.getAllCharacters(page)
+            if (forceRefresh)
+                dao.deleteAll()
+
             dao.insertCharacters(remoteData.results.map { CharacterMapper.mapDtoToModel(it) })
             return remoteData.results.map { CharacterMapper.mapDtoToEntity(it) }
         }

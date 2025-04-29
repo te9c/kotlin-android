@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -32,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -78,8 +80,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(viewModel: CharacterViewModel) {
-    val characters by viewModel.characters.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    //val isLoading by viewModel.isLoading.collectAsState()
     val isError by viewModel.isError.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -106,21 +107,7 @@ fun MainScreen(viewModel: CharacterViewModel) {
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            if (isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        strokeWidth = 4.dp,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-            } else if (isError) {
-                CharacterListScreen(viewModel)
-            } else {
-                CharacterListScreen(viewModel)
-            }
+            CharacterListScreen(viewModel)
         }
     }
 }
@@ -128,9 +115,33 @@ fun MainScreen(viewModel: CharacterViewModel) {
 @Composable
 fun CharacterListScreen(viewModel: CharacterViewModel) {
     val characters by viewModel.characters.collectAsState()
-    LazyColumn {
+    val isLoading by viewModel.isLoading.collectAsState()
+    val hasMore by viewModel.hasMore.collectAsState()
+    val lazyListState = rememberLazyListState()
+
+    LazyColumn(state = lazyListState) {
         items(characters) { character ->
             CharacterItem(character)
+        }
+        if (isLoading && hasMore) {
+            item {
+                Box(Modifier.fillMaxWidth().padding(8.dp), Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(lazyListState) {
+        snapshotFlow {
+            val layoutInfo = lazyListState.layoutInfo
+            val totalItems = layoutInfo.totalItemsCount
+            val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            lastVisible >= totalItems - 3
+        }.collect { shouldLoad ->
+            if (shouldLoad && !isLoading && hasMore) {
+                viewModel.loadCharacters()
+            }
         }
     }
 }
