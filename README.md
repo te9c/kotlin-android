@@ -13,4 +13,4 @@
 
 ## Showcase
 
-https://github.com/user-attachments/assets/188204cd-b73b-41b0-b9a3-b10f935b43e5
+https://github.com/user-attachments/assets/4ef77198-f5f1-4e6c-800e-dd588cceba75
